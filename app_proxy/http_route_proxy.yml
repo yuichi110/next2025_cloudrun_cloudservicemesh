@@ -1,0 +1,15 @@
+name: "route-proxy"
+
+hostnames:
+- "proxy.meshapps.internal"
+
+meshes:
+- "projects/yuichiito-servicemesh3/locations/global/meshes/meshapps"
+
+rules:
+- action:
+    destinations:
+    - serviceName: "projects/yuichiito-servicemesh3/locations/global/backendServices/target2-mesh-backendservice"
+      weight: 50
+    - serviceName: "projects/yuichiito-servicemesh3/locations/global/backendServices/target3-mesh-backendservice"
+      weight: 50

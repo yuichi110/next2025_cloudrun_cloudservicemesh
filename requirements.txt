@@ -1,0 +1,10 @@
+# This is for IDE and local test
+
+# http server and client
+fastapi
+uvicorn
+httpx
+
+# google auth. requests is used internally by google auth
+requests
+google-auth
