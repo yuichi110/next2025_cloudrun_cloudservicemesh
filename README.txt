@@ -1,1 +1,0 @@
-https://cloud.google.com/service-mesh/docs/configure-cloud-service-mesh-for-cloud-run?hl=ja#before
