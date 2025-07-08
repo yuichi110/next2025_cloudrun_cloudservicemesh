@@ -285,39 +285,48 @@ deploy_mesh_backend() {
 # Usage: import_mesh_http_route <app-name> <domain-name> <mesh-name> <project-id>
 import_mesh_http_route() {
   # 1. Assign positional arguments to local variables.
-  local app_name="$1"
+  local host_name="$1"
   local domain_name="$2"
   local mesh_name="$3"
   local project_id="$4"
+  shift 4
+  local app_names=("$@")
 
   # 2. Validate that all required arguments were provided.
-  if [ -z "${app_name}" ] || [ -z "${domain_name}" ] || [ -z "${mesh_name}" ] || [ -z "${project_id}" ]; then
+  if [ -z "${host_name}" ] || [ -z "${domain_name}" ] || [ -z "${mesh_name}" ] || [ -z "${project_id}" ]; then
     echo "❌ Error: Missing required arguments." >&2
     echo "   Usage: import_mesh_http_route <app-name> <domain-name> <mesh-name> <project-id>" >&2
     exit 1
   fi
 
   # 3. Define resource names.
-  local route_name="route-${app_name}"
-  local hostname="${app_name}.${domain_name}"
+  local route_name="http-route-for-${host_name}"
+  local full_host_name="${host_name}.${domain_name}"
   local mesh_resource="projects/${project_id}/locations/global/meshes/${mesh_name}"
   local backend_service_resource="projects/${project_id}/locations/global/backendServices/${app_name}-mesh-backendservice"
   local yaml_file="http_route_temp.yml"
 
-  # 4. Create the YAML file using a here document.
+  # 4.
+  local destinations_yaml=""
+  for app_name in "${app_names[@]}"; do
+    destinations_yaml+="
+    - serviceName: \"projects/${project_id}/locations/global/backendServices/${app_name}-mesh-backendservice\"
+      weight: 1"
+  done
+
+  # 5. Create the YAML file using a here document.
   cat <<-EOF > "${yaml_file}"
 name: "${route_name}"
 
 hostnames:
-- "${hostname}"
+- "${full_host_name}"
 
 meshes:
 - "${mesh_resource}"
 
 rules:
 - action:
-    destinations:
-    - serviceName: "${backend_service_resource}"
+    destinations:${destinations_yaml}
 EOF
 
   echo_and_run cat ${yaml_file}

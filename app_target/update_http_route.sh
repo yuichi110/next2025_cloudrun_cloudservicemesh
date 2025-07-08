@@ -11,8 +11,13 @@ import_mesh_http_route \
   ${TARGET_APP_NAME}1 \
   $MESH_DOMAIN_NAME \
   $MESH_NAME \
-  $PROJECT
+  $PROJECT \
+  ${TARGET_APP_NAME}1
 
-echo_and_run gcloud network-services http-routes import route-target23 \
-    --source=http_route_target23.yml \
-    --location=global
+import_mesh_http_route \
+  ${TARGET_APP_NAME}23 \
+  $MESH_DOMAIN_NAME \
+  $MESH_NAME \
+  $PROJECT \
+  ${TARGET_APP_NAME}2 \
+  ${TARGET_APP_NAME}3

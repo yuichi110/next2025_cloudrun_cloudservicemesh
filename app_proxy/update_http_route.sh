@@ -11,4 +11,5 @@ import_mesh_http_route \
   $PROXY_APP_NAME \
   $MESH_DOMAIN_NAME \
   $MESH_NAME \
-  $PROJECT
+  $PROJECT \
+  $PROXY_APP_NAME
